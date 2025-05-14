@@ -1,0 +1,36 @@
+# Node modules
+node_modules/
+
+# Firebase cache and config
+.firebase/
+.firebaserc
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# dotenv environment variables
+.env
+.env.local
+.env.*.local
+
+# Compiled output (for TypeScript)
+lib/
+dist/
+build/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Firebase emulators data
+firebase-debug.log
+functions/lib/
+functions/node_modules/
