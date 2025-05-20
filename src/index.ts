@@ -1,22 +1,3 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * import {onCall} from "firebase-functions/v2/https";
- * import {onDocumentWritten} from "firebase-functions/v2/firestore";
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
-
-// import {onRequest} from "firebase-functions/v2/https";
-// import * as logger from "firebase-functions/logger";
-
-// Start writing functions
-// https://firebase.google.com/docs/functions/typescript
-
-// export const helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import sgMail from "@sendgrid/mail";
@@ -38,18 +19,36 @@ export const sendClaimEmail = functions.firestore
 
     const email = data.email as string;
     const amount = data.amount as number;
+    const message = data?.message as string;
     const senderName = data.senderName as string;
 
+    // TODO: 1. Replce from with noreply@daxfi.xyz -- obs: must be verified in SendGrid.
+    // TODO: 2. Fill src with official logo.
+    // TODO: 3. If necessary, change the link on action button.
     const msg: sgMail.MailDataRequired = {
       to: email,
-      from: "luiz@brickbonds.ca", // TODO: noreply@daxfi.xyz // must be verified in SendGrid
+      from: "luiz@brickbonds.ca", 
       subject: `You've received $${amount} on DaxFi!`,
       html: `
-        <h2>Hi! You received $${amount} from ${senderName}</h2>
-        <p>Click below to claim your funds and activate your wallet:</p>
-        <a href="https://daxfi.xyz/claim?email=${encodeURIComponent(email)}">
-          <button style="background:#007aff;color:#fff;padding:10px 20px;border:none;border-radius:4px;">Claim My Money</button>
-        </a>
+        <div style="max-width: 480px; margin: 0 auto; font-family: sans-serif; text-align: center; padding: 40px 20px; border-radius: 12px;">
+          <img src="" alt="DaxFi Logo" style="max-width: 160px; margin-bottom: 24px;" />
+          <h2 style="font-weight: 600; margin-bottom: 12px;">
+            You've received $${amount}
+          </h2>
+          <p style="margin: 0 0 12px; font-size: 14px; color: #555;">
+            from ${senderName} on ${new Date().toLocaleDateString()}
+          </p>
+          ${
+            message
+              ? `<p style="margin: 12px 0 24px; font-size: 14px;"><strong>Message:</strong> “${message}”</p>`
+              : ""
+          }
+          <a href="https://daxfi.xyz/signup" style="text-decoration: none;">
+            <button style="background-color: #7E57C2; color: white; border: none; border-radius: 6px; padding: 14px 28px; font-size: 16px; cursor: pointer;">
+              Join us on daxFi!
+            </button>
+          </a>
+        </div>
       `,
     };
 
