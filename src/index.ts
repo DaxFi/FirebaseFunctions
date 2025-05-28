@@ -22,16 +22,13 @@ export const sendClaimEmail = functions.firestore
     const message = data?.message as string;
     const senderName = data.senderName as string;
 
-    // TODO: 1. Replce from with noreply@daxfi.xyz -- obs: must be verified in SendGrid.
-    // TODO: 2. Fill src with official logo.
-    // TODO: 3. If necessary, change the link on action button.
     const msg: sgMail.MailDataRequired = {
       to: email,
-      from: "luiz@brickbonds.ca",
+      from: "noreply@daxfi.xyz",
       subject: `You've received $${amount} on DaxFi!`,
       html: `
         <div style="max-width: 480px; margin: 0 auto; font-family: sans-serif; text-align: center; padding: 40px 20px; border-radius: 12px;">
-          <img src="" alt="DaxFi Logo" style="max-width: 160px; margin-bottom: 24px;" />
+          <img src="https://daxfi.xyz/logo-daxfi.png" alt="DaxFi Logo" style="max-width: 160px; margin-bottom: 24px;" />
           <h2 style="font-weight: 600; margin-bottom: 12px;">
             You've received $${amount}
           </h2>
@@ -43,7 +40,7 @@ export const sendClaimEmail = functions.firestore
               ? `<p style="margin: 12px 0 24px; font-size: 14px;"><strong>Message:</strong> “${message}”</p>`
               : ""
           }
-          <a href="https://daxfi.xyz/signup" style="text-decoration: none;">
+          <a href="https://daxfi.xyz/login" style="text-decoration: none;">
             <button style="background-color: #7E57C2; color: white; border: none; border-radius: 6px; padding: 14px 28px; font-size: 16px; cursor: pointer;">
               Join us on daxFi!
             </button>
@@ -78,11 +75,11 @@ export const sendRequestEmail = functions.firestore
 
     const msg: sgMail.MailDataRequired = {
       to: recipientEmail,
-      from: "luiz@brickbonds.ca", // TODO: replace with verified noreply@daxfi.xyz
+      from: "noreply@daxfi.xyz",
       subject: `${requesterName} is requesting $${amount} on DaxFi`,
       html: `
         <div style="max-width: 480px; margin: 0 auto; font-family: sans-serif; text-align: center; padding: 40px 20px; border-radius: 12px;">
-          <img src="" alt="DaxFi Logo" style="max-width: 160px; margin-bottom: 24px;" />
+          <img src="https://daxfi.xyz/logo-daxfi.png" alt="DaxFi Logo" style="max-width: 160px; margin-bottom: 24px;" />
           <h2 style="font-weight: 600; margin-bottom: 12px;">
             ${requesterName} is requesting $${amount} from you
           </h2>
@@ -91,9 +88,9 @@ export const sendRequestEmail = functions.firestore
               ? `<p style="margin: 12px 0 24px; font-size: 14px;"><strong>Message:</strong> “${message}”</p>`
               : ""
           }
-          <a href="https://daxfi.xyz/pay?email=${encodeURIComponent(recipientEmail)}" style="text-decoration: none;">
+          <a href="https://daxfi.xyz/confirm-transaction?recipient=${recipientEmail}&amount=${amount}&message=${message}" style="text-decoration: none;">
             <button style="background-color: #7E57C2; color: white; border: none; border-radius: 6px; padding: 14px 28px; font-size: 16px; cursor: pointer;">
-              Pay with DaxFi
+              Pay with DaxFi!
             </button>
           </a>
         </div>
