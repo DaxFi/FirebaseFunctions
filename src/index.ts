@@ -17,7 +17,7 @@ export const sendClaimEmail = functions.firestore
     }
     const data = snapshot.data();
 
-    const email = data.email as string;
+    const email = data.recipientEmail as string;
     const amount = data.amount as number;
     const message = data?.message as string;
     const senderName = data.senderName as string;
@@ -30,10 +30,13 @@ export const sendClaimEmail = functions.firestore
         <div style="max-width: 480px; margin: 0 auto; font-family: sans-serif; text-align: center; padding: 40px 20px; border-radius: 12px;">
           <img src="https://daxfi.xyz/logo-daxfi.png" alt="DaxFi Logo" style="max-width: 160px; margin-bottom: 24px;" />
           <h2 style="font-weight: 600; margin-bottom: 12px;">
-            You've received $${amount}
+            🎉 You've received $${amount}
           </h2>
           <p style="margin: 0 0 12px; font-size: 14px; color: #555;">
-            from ${senderName} on ${new Date().toLocaleDateString()}
+            ${senderName} sent you money using DaxFi on ${new Date().toLocaleDateString()}.
+          </p>
+          <p style="margin: 0 0 20px; font-size: 14px; color: #333;">
+            It is already reserved for you — just sign in to claim it instantly.
           </p>
           ${
             message
@@ -42,9 +45,17 @@ export const sendClaimEmail = functions.firestore
           }
           <a href="https://daxfi.xyz/login" style="text-decoration: none;">
             <button style="background-color: #7E57C2; color: white; border: none; border-radius: 6px; padding: 14px 28px; font-size: 16px; cursor: pointer;">
-              Join us on daxFi!
+              Sign in to receive your funds
             </button>
           </a>
+          <p style="font-size: 12px; color: #999; margin-top: 24px;">
+            This email was sent to you because someone sent funds using DaxFi — a secure, feeless stablecoin payment platform built for instant transfers via email.
+            <br />
+            If you were not expecting this, you can safely ignore it.
+          </p>
+          <p style="font-size: 12px; color: #999;">
+            <a href="https://daxfi.xyz/about" style="color: #999; text-decoration: underline;">What is DaxFi?</a>
+          </p>
         </div>
       `,
     };
@@ -87,6 +98,9 @@ export const sendRequestEmail = functions.firestore
           <h2 style="font-weight: 600; margin-bottom: 12px;">
             ${requesterName} is requesting $${amount} from you
           </h2>
+          <p style="margin: 0 0 12px; font-size: 14px; color: #555;">
+            via DaxFi — a secure, gasless stablecoin payment platform.
+          </p>
           ${
             message
               ? `<p style="margin: 12px 0 24px; font-size: 14px;"><strong>Message:</strong> “${message}”</p>`
@@ -94,9 +108,17 @@ export const sendRequestEmail = functions.firestore
           }
           <a href="${baseUrl}/login?redirect=${redirect}" style="text-decoration: none;">
             <button style="background-color: #7E57C2; color: white; border: none; border-radius: 6px; padding: 14px 28px; font-size: 16px; cursor: pointer;">
-              Pay with DaxFi!
+              Review and Send Funds
             </button>
           </a>
+          <p style="font-size: 12px; color: #999; margin-top: 24px;">
+            You received this email because ${requesterName} sent a payment request using DaxFi.
+            <br />
+            DaxFi lets you request or send stablecoins instantly — no wallet required. Just sign in to complete the transaction.
+          </p>
+          <p style="font-size: 12px; color: #999;">
+            <a href="https://daxfi.xyz/about" style="color: #999; text-decoration: underline;">What is DaxFi?</a>
+          </p>
         </div>
       `,
     };
