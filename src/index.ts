@@ -68,13 +68,17 @@ export const sendRequestEmail = functions.firestore
     }
     const data = snapshot.data();
 
-    const recipientEmail = data.recipientEmail as string;
+    const requesterEmail = data.requesterEmail as string;
+    const requesteeEmail = data.requesteeEmail as string;
     const amount = data.amount as number;
     const message = data?.message as string;
     const requesterName = data.requesterName as string;
+    const baseUrl = "https://daxfi.xyz";
+    const redirect = encodeURIComponent(`/confirm-transaction?recipient=${requesterEmail}&amount=${amount}&message=${message}`);
+
 
     const msg: sgMail.MailDataRequired = {
-      to: recipientEmail,
+      to: requesteeEmail,
       from: "noreply@daxfi.xyz",
       subject: `${requesterName} is requesting $${amount} on DaxFi`,
       html: `
@@ -88,7 +92,7 @@ export const sendRequestEmail = functions.firestore
               ? `<p style="margin: 12px 0 24px; font-size: 14px;"><strong>Message:</strong> “${message}”</p>`
               : ""
           }
-          <a href="https://daxfi.xyz/confirm-transaction?recipient=${recipientEmail}&amount=${amount}&message=${message}" style="text-decoration: none;">
+          <a href="${baseUrl}/login?redirect=${redirect}" style="text-decoration: none;">
             <button style="background-color: #7E57C2; color: white; border: none; border-radius: 6px; padding: 14px 28px; font-size: 16px; cursor: pointer;">
               Pay with DaxFi!
             </button>
@@ -99,7 +103,7 @@ export const sendRequestEmail = functions.firestore
 
     try {
       await sgMail.send(msg);
-      console.log(`Request email sent to ${recipientEmail}`);
+      console.log(`Request email sent to ${requesterEmail}`);
     } catch (error) {
       console.error("Error sending request email:", error);
     }
